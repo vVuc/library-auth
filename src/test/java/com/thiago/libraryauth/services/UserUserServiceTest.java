@@ -7,7 +7,7 @@ import com.thiago.libraryauth.exception.EmailAlreadyExistException;
 import com.thiago.libraryauth.exception.InvalidCredentialsException;
 import com.thiago.libraryauth.exception.UserNotFoundException;
 import com.thiago.libraryauth.repositories.UsersRepository;
-import com.thiago.libraryauth.service.AuthService;
+import com.thiago.libraryauth.service.UserService;
 import com.thiago.libraryauth.service.SecurityService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,9 +21,9 @@ import java.util.Optional;
 //Estou usando o @ExtendWith(MockitoExtension.class) para mockar os serviços que eu não testarei neste arquivo
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Testes de autenticação")
-public class UserAuthServiceTest {
+public class UserUserServiceTest {
     @InjectMocks // O Mockito vai criar o AuthService e injetar o mock abaixo nele automaticamente
-    private AuthService authService;
+    private UserService userService;
 
     @Mock
     //Criei este mock para conseguir fazer os testes com as exceções sem transformar isto em um teste de integração
@@ -62,7 +62,7 @@ public class UserAuthServiceTest {
             // Configurando o comportamento do Mock
             Mockito.when(securityService.encode(password)).thenReturn(encodedPassword);
 
-            UserAuth newUser = authService.register(dataRegistration);
+            UserAuth newUser = userService.register(dataRegistration);
 
             Assertions.assertEquals(encodedPassword, newUser.getPassword());
             Assertions.assertEquals(email, newUser.getEmail());
@@ -81,7 +81,7 @@ public class UserAuthServiceTest {
             EmailAlreadyExistException exception = Assertions.assertThrows(
                     EmailAlreadyExistException.class,
                     () -> {
-                        authService.register(dataRegistration);
+                        userService.register(dataRegistration);
                     }
             );
 
@@ -118,7 +118,7 @@ public class UserAuthServiceTest {
             Mockito.when(usersRepository.findByEmail(email)).thenReturn(Optional.ofNullable(user));
             Mockito.when(securityService.matches(password, user.getPassword())).thenReturn(true);
 
-            authService.login(loginUserDto);
+            userService.login(loginUserDto);
         }
 
         @Test
@@ -127,7 +127,7 @@ public class UserAuthServiceTest {
 
             Mockito.when(usersRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-            UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class, () -> authService.login(loginUserDto));
+            UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class, () -> userService.login(loginUserDto));
 
             Assertions.assertEquals("User not found", exception.getMessage());
         }
@@ -139,7 +139,7 @@ public class UserAuthServiceTest {
             Mockito.when(usersRepository.findByEmail(email)).thenReturn(Optional.ofNullable(user));
             Mockito.when(securityService.matches(password, user.getPassword())).thenReturn(false);
 
-            InvalidCredentialsException exception = Assertions.assertThrows(InvalidCredentialsException.class, () -> authService.login(loginUserDto));
+            InvalidCredentialsException exception = Assertions.assertThrows(InvalidCredentialsException.class, () -> userService.login(loginUserDto));
 
             Assertions.assertEquals("Invalid Credentials", exception.getMessage());
         }
