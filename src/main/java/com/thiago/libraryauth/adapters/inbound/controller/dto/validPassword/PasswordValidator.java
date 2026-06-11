@@ -1,4 +1,4 @@
-package com.thiago.libraryauth.domain.dto.validPassword;
+package com.thiago.libraryauth.adapters.inbound.controller.dto.validPassword;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

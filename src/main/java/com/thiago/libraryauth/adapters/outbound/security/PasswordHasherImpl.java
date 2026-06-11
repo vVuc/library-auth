@@ -1,6 +1,6 @@
-package com.thiago.libraryauth.adapters.inbound;
+package com.thiago.libraryauth.adapters.outbound.security;
 
-import com.thiago.libraryauth.domain.ports.inbound.PasswordHasher;
+import com.thiago.libraryauth.domain.ports.outbound.PasswordHasher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

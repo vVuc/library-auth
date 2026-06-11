@@ -1,10 +1,8 @@
-package com.thiago.libraryauth.domain.ports.inbound;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
+package com.thiago.libraryauth.domain.ports.outbound;
 
 public interface PasswordHasher {
-    public String encode(String rawPassword);
+    String encode(String rawPassword);
 
-    public boolean matches(String rawPassword, String encodedPassword);
+    boolean matches(String rawPassword, String encodedPassword);
 
 }

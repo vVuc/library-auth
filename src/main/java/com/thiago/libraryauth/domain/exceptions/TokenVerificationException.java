@@ -1,4 +1,4 @@
-package com.thiago.libraryauth.exception;
+package com.thiago.libraryauth.domain.exceptions;
 
 public class TokenVerificationException extends RuntimeException {
     public TokenVerificationException(String message) {

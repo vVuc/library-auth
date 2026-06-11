@@ -1,8 +1,9 @@
-package com.thiago.libraryauth.adapters.outbound.entities;
+package com.thiago.libraryauth.infra.security;
 
 import com.thiago.libraryauth.domain.models.User;
 import com.thiago.libraryauth.domain.models.UserRole;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
 @NullMarked
 @AllArgsConstructor
 public class SecurityUser implements UserDetails {
@@ -25,10 +27,6 @@ public class SecurityUser implements UserDetails {
         } else {
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
         }
-    }
-
-    public User getUser() {
-        return this.user;
     }
 
     @Override

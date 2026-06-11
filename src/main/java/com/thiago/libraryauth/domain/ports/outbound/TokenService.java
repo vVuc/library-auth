@@ -1,19 +1,19 @@
-package com.thiago.libraryauth.adapters.outbound.token;
+package com.thiago.libraryauth.domain.ports.outbound;
 
 import com.thiago.libraryauth.domain.models.User;
 
 import java.time.Instant;
 
 public interface TokenService {
-    public String generateToken(User user);
+    String generateToken(User user);
 
-    public String verifyToken(String token);
+    String verifyToken(String token);
 
-    public Instant getExpiresAtAsInstantFromToken(String token);
+    Instant getExpiresAtAsInstantFromToken(String token);
 
-    public void invalidateToken(String token, long tempoRestanteEmSegundos);
+    void invalidateToken(String token, long tempoRestanteEmSegundos);
 
-    public boolean isInvalidateToken(String token);
+    boolean isInvalidateToken(String token);
 
-    public Instant getExpirationDate();
+    Instant getExpirationDate();
 }

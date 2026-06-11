@@ -1,14 +1,18 @@
-package com.thiago.libraryauth.infra;
+package com.thiago.libraryauth.adapters.inbound.rest.exceptions;
 
 import com.thiago.libraryauth.domain.exceptions.EmailAlreadyExistException;
 import com.thiago.libraryauth.domain.exceptions.TokenCreationException;
 import com.thiago.libraryauth.domain.exceptions.TokenVerificationException;
 import com.thiago.libraryauth.domain.exceptions.UserNotFoundException;
+import org.jspecify.annotations.NonNull;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
@@ -42,9 +46,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
-            org.springframework.http.HttpHeaders headers,
-            org.springframework.http.HttpStatusCode status,
-            org.springframework.web.context.request.WebRequest request
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode status,
+            @NonNull WebRequest request
     ) {
         // 1. Coleta todos os erros de campos do DTO e junta em uma única String
         List<RestFieldError> errors = ex.getFieldErrors().stream()

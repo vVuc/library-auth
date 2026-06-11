@@ -1,4 +1,4 @@
-package com.thiago.libraryauth.domain;
+package com.thiago.libraryauth.domain.models;
 
 import lombok.Getter;
 

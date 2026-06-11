@@ -1,4 +1,4 @@
-package com.thiago.libraryauth.adapters.outbound.repositories;
+package com.thiago.libraryauth.domain.ports.outbound;
 
 import com.thiago.libraryauth.domain.models.User;
 

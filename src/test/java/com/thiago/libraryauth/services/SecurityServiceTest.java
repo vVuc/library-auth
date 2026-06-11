@@ -1,7 +1,6 @@
 package com.thiago.libraryauth.services;
 
-import com.thiago.libraryauth.config.SecurityConfig;
-import com.thiago.libraryauth.service.SecurityService;
+import com.thiago.libraryauth.infra.config.SecurityConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

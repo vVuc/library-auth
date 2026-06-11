@@ -1,14 +1,12 @@
 package com.thiago.libraryauth.services;
 
-import com.thiago.libraryauth.dto.LoginUserDto;
-import com.thiago.libraryauth.dto.RegisterUserDto;
-import com.thiago.libraryauth.domain.UserAuth;
-import com.thiago.libraryauth.exception.EmailAlreadyExistException;
-import com.thiago.libraryauth.exception.InvalidCredentialsException;
-import com.thiago.libraryauth.exception.UserNotFoundException;
-import com.thiago.libraryauth.repositories.UsersRepository;
-import com.thiago.libraryauth.service.UserService;
-import com.thiago.libraryauth.service.SecurityService;
+import com.thiago.libraryauth.adapters.inbound.controller.dto.LoginUserDto;
+import com.thiago.libraryauth.adapters.inbound.controller.dto.RegisterUserDto;
+import com.thiago.libraryauth.domain.exceptions.EmailAlreadyExistException;
+import com.thiago.libraryauth.domain.exceptions.InvalidCredentialsException;
+import com.thiago.libraryauth.domain.exceptions.UserNotFoundException;
+import com.thiago.libraryauth.adapters.outbound.repositories.JpaUserRepository;
+import com.thiago.libraryauth.application.service.UserServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,11 +21,11 @@ import java.util.Optional;
 @DisplayName("Testes de autenticação")
 public class UserUserServiceTest {
     @InjectMocks // O Mockito vai criar o AuthService e injetar o mock abaixo nele automaticamente
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @Mock
     //Criei este mock para conseguir fazer os testes com as exceções sem transformar isto em um teste de integração
-    private UsersRepository usersRepository;
+    private JpaUserRepository usersRepository;
 
     @Mock // Cria um mock puro do Mockito, sem depender do Spring
     private SecurityService securityService;
@@ -35,7 +33,7 @@ public class UserUserServiceTest {
     @Nested
     @DisplayName("Testes para método de Register")
     class RegisterTests {
-        private String username;
+        private String nickname;
         private String password;
         private String encodedPassword;
         private String email;
@@ -44,13 +42,13 @@ public class UserUserServiceTest {
         //Executa este antes de cada teste
         @BeforeEach
         public void setUp() {
-            username = "username";
+            nickname = "nickname";
             password = "Mine2015@";
             encodedPassword = "encodedPassword123";
             email = "email@hotmail.com";
 
             //Dto levando "input" do usuário até a camada de serviço
-            dataRegistration = new RegisterUserDto(email, password, username);
+            dataRegistration = new RegisterUserDto(email, password, nickname);
         }
 
         //Define esta função como uma teste
@@ -62,11 +60,11 @@ public class UserUserServiceTest {
             // Configurando o comportamento do Mock
             Mockito.when(securityService.encode(password)).thenReturn(encodedPassword);
 
-            UserAuth newUser = userService.register(dataRegistration);
+            UserAuth newUser = userServiceImpl.register(dataRegistration);
 
             Assertions.assertEquals(encodedPassword, newUser.getPassword());
             Assertions.assertEquals(email, newUser.getEmail());
-            Assertions.assertEquals(username, newUser.getUsername());
+            Assertions.assertEquals(nickname, newUser.getUsername());
 
             Mockito.verify(securityService).encode(password);
             Mockito.verify(usersRepository).save(newUser);
@@ -81,7 +79,7 @@ public class UserUserServiceTest {
             EmailAlreadyExistException exception = Assertions.assertThrows(
                     EmailAlreadyExistException.class,
                     () -> {
-                        userService.register(dataRegistration);
+                        userServiceImpl.register(dataRegistration);
                     }
             );
 
@@ -100,12 +98,13 @@ public class UserUserServiceTest {
         public void setUp() {
             String password = "Mine2015@";
             String email = "email@hotmail.com";
-            String username = "username";
+            String nickname = "nickname";
 
-            user = new UserAuth();
-            user.setEmail(email);
-            user.setUsername(username);
-            user.setPassword(password);
+            user = UserAuth.builder()
+                    .email(email)
+                    .nickname(nickname)
+                    .password(password)
+                    .build();
 
             loginUserDto = new LoginUserDto(email, password);
         }
@@ -118,7 +117,7 @@ public class UserUserServiceTest {
             Mockito.when(usersRepository.findByEmail(email)).thenReturn(Optional.ofNullable(user));
             Mockito.when(securityService.matches(password, user.getPassword())).thenReturn(true);
 
-            userService.login(loginUserDto);
+            userServiceImpl.login(loginUserDto);
         }
 
         @Test
@@ -127,7 +126,7 @@ public class UserUserServiceTest {
 
             Mockito.when(usersRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-            UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class, () -> userService.login(loginUserDto));
+            UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class, () -> userServiceImpl.login(loginUserDto));
 
             Assertions.assertEquals("User not found", exception.getMessage());
         }
@@ -139,7 +138,7 @@ public class UserUserServiceTest {
             Mockito.when(usersRepository.findByEmail(email)).thenReturn(Optional.ofNullable(user));
             Mockito.when(securityService.matches(password, user.getPassword())).thenReturn(false);
 
-            InvalidCredentialsException exception = Assertions.assertThrows(InvalidCredentialsException.class, () -> userService.login(loginUserDto));
+            InvalidCredentialsException exception = Assertions.assertThrows(InvalidCredentialsException.class, () -> userServiceImpl.login(loginUserDto));
 
             Assertions.assertEquals("Invalid Credentials", exception.getMessage());
         }

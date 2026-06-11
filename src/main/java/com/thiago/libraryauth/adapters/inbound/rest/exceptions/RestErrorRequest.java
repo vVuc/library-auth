@@ -1,4 +1,4 @@
-package com.thiago.libraryauth.infra;
+package com.thiago.libraryauth.adapters.inbound.rest.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

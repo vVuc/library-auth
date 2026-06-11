@@ -1,4 +1,4 @@
-package com.thiago.libraryauth.domain;
+package com.thiago.libraryauth.domain.models;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

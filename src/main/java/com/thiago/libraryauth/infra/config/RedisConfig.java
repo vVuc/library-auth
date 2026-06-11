@@ -1,4 +1,4 @@
-package com.thiago.libraryauth.infra.redis;
+package com.thiago.libraryauth.infra.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

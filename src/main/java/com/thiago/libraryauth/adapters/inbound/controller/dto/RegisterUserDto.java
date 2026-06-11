@@ -1,6 +1,6 @@
-package com.thiago.libraryauth.domain.dto;
+package com.thiago.libraryauth.adapters.inbound.controller.dto;
 
-import com.thiago.libraryauth.domain.dto.validPassword.ValidPassword;
+import com.thiago.libraryauth.adapters.inbound.controller.dto.validPassword.ValidPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;

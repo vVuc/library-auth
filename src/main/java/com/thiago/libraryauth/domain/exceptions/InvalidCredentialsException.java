@@ -1,9 +1,6 @@
-package com.thiago.libraryauth.exception;
-
-//Por que o exception já não vem como o "Status" assinalado aqui??
+package com.thiago.libraryauth.domain.exceptions;
 
 public class InvalidCredentialsException extends RuntimeException {
-    public InvalidCredentialsException() { super("Invalid Credentials"); }
     public InvalidCredentialsException(String message) { super(message);  }
 
 }

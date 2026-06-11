@@ -1,15 +1,15 @@
-package com.thiago.libraryauth.adapters.inbound;
+package com.thiago.libraryauth.infra.security;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.thiago.libraryauth.adapters.outbound.repositories.UserRepositoryImpl;
-import com.thiago.libraryauth.domain.User;
-import com.thiago.libraryauth.infra.security.SecurityUser;
-import com.thiago.libraryauth.infra.security.TokenService;
+import com.thiago.libraryauth.domain.ports.outbound.TokenService;
+import com.thiago.libraryauth.domain.ports.outbound.UserRepository;
+import com.thiago.libraryauth.domain.models.User;
+import com.thiago.libraryauth.domain.exceptions.TokenVerificationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -22,15 +22,20 @@ import java.util.Optional;
 @AllArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
-    private final UserRepositoryImpl userRepositoryImpl;
+    private final UserRepository userRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
         var token = this.recoveryToken(request);
         if (token != null) {
+            if (tokenService.isInvalidateToken(token)) throw new TokenVerificationException("Token Revogado");
             String email = tokenService.verifyToken(token);
-            Optional<User> user = userRepositoryImpl.findByEmail(email);
-            if (user.isEmpty()) throw new JWTVerificationException("Token invalido");
+            Optional<User> user = userRepository.findByEmail(email);
+            if (user.isEmpty()) throw new TokenVerificationException("Token invalido");
             SecurityUser securityUser = new SecurityUser(user.get());
             var authentication = new UsernamePasswordAuthenticationToken(securityUser, null, securityUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
