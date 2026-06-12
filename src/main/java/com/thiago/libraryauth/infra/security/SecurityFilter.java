@@ -32,10 +32,10 @@ public class SecurityFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         var token = this.recoveryToken(request);
         if (token != null) {
-            if (tokenService.isInvalidateToken(token)) throw new TokenVerificationException("Token Revogado");
+            if (tokenService.isInvalidateToken(token)) throw new TokenVerificationException("Token Revoked");
             String email = tokenService.verifyToken(token);
             Optional<User> user = userRepository.findByEmail(email);
-            if (user.isEmpty()) throw new TokenVerificationException("Token invalido");
+            if (user.isEmpty()) throw new TokenVerificationException("Invalid token");
             SecurityUser securityUser = new SecurityUser(user.get());
             var authentication = new UsernamePasswordAuthenticationToken(securityUser, null, securityUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

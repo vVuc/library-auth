@@ -50,13 +50,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             @NonNull HttpStatusCode status,
             @NonNull WebRequest request
     ) {
-        // 1. Coleta todos os erros de campos do DTO e junta em uma única String
         List<RestFieldError> errors = ex.getFieldErrors().stream()
                 .map(fieldError -> new RestFieldError(fieldError.getField(), fieldError.getDefaultMessage()))
                 .toList();
         RestErrorRequest errorMessage = new RestErrorRequest(HttpStatus.BAD_REQUEST, errors);
 
-        // 3. Retorna a resposta padronizada com o status 400 (Bad Request)
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 }

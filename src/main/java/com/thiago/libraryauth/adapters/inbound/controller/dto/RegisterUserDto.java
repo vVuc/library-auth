@@ -6,14 +6,14 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 public record RegisterUserDto(
-        @NotEmpty(message = "O email é obrigatório")
-        @Email(message = "O email deve ser valido")
+        @NotEmpty(message = "The email address is required")
+        @Email(message = "The email address must be valid")
         String email,
-        @NotEmpty(message = "A senha é obrigatório")
-        @Size(min = 8, message = "Tamanho minimo para senhas é 8 caracteres")
+        @NotEmpty(message = "the password is required")
+        @Size(min = 8, message = "Password must be at least 8 characters long")
         @ValidPassword
         String password,
-        @NotEmpty(message = "A nickname é obrigatório")
+        @NotEmpty(message = "The nickname is required")
         String nickname
 ) {
 }

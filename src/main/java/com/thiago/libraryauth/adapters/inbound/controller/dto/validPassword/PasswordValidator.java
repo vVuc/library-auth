@@ -6,7 +6,6 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.ArrayList;
 import java.util.List;
 
-// 2. O VALIDADOR (Onde a mágica acontece)
 public class PasswordValidator implements ConstraintValidator<ValidPassword, String> {
     @Override
     public boolean isValid(String passwordValue, ConstraintValidatorContext context) {
@@ -19,7 +18,6 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
         boolean hasNumber = false;
         boolean hasEspecialChar = false;
 
-        //Verifica se a ‘string’ contem 1 letra maiúscula, 1 minúscula, 1 carácter especial e 1 numero
         for (char c : passwordValue.toCharArray()) {
             if (Character.isUpperCase(c)) {
                 hasUpperLetter = true;
@@ -50,7 +48,7 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
 
         context.disableDefaultConstraintViolation();
 
-        String customMessage = "Senha inválida: " + String.join(", ", errors) + ".";
+        String customMessage = "Invalid password: " + String.join(", ", errors) + ".";
 
         context.buildConstraintViolationWithTemplate(customMessage).addConstraintViolation();
         return false;

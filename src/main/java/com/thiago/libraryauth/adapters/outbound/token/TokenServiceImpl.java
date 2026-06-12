@@ -46,7 +46,6 @@ public class TokenServiceImpl implements TokenService {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException e) {
-//            throw new RuntimeException("Erro while verification Token", e);
             return "";
         }
     }
