@@ -9,8 +9,6 @@ import com.thiago.libraryauth.domain.exceptions.EmailAlreadyExistException;
 import com.thiago.libraryauth.domain.exceptions.InvalidCredentialsException;
 import com.thiago.libraryauth.domain.exceptions.UserNotFoundException;
 
-import org.springframework.security.authentication.AuthenticationManager;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,14 +41,13 @@ public class UserServiceImpl implements UserUseCase {
     @Override
     public String login(String email, String password) {
 
-        // Regra de Negócio Pura de Login sem depender do AuthenticationManager do Spring
         User user = usersRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
 
         if (!passwordHasher.matches(password, user.getPassword())) {
             throw new InvalidCredentialsException("senha incorreta");
         }
-        return tokenService.generateToken(user);
+        return tokenService.generateToken(user.getEmail());
     }
 
     @Override

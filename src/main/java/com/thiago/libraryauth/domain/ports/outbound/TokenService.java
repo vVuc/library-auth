@@ -1,11 +1,9 @@
 package com.thiago.libraryauth.domain.ports.outbound;
 
-import com.thiago.libraryauth.domain.models.User;
-
 import java.time.Instant;
 
 public interface TokenService {
-    String generateToken(User user);
+    String generateToken(String email);
 
     String verifyToken(String token);
 

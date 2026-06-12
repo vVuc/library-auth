@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.thiago.libraryauth.domain.models.User;
 import com.thiago.libraryauth.domain.exceptions.TokenCreationException;
 import com.thiago.libraryauth.domain.exceptions.TokenVerificationException;
 import com.thiago.libraryauth.domain.ports.outbound.TokenService;
@@ -25,12 +24,12 @@ public class TokenServiceImpl implements TokenService {
     @Autowired
     private StringRedisTemplate redisTemplate;
     @Override
-    public String generateToken(User user) {
+    public String generateToken(String email) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("auth-api")
-                    .withSubject(user.getEmail())
+                    .withSubject(email)
                     .withExpiresAt(getExpirationDate())
                     .sign(algorithm);
         } catch (JWTCreationException e) {
